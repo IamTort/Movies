@@ -3,6 +3,12 @@
 
 import UIKit
 
+// protocol ChangeBackgroundDelegate: AnyObject {
+//    func changeBackground(image: UIImage)
+// }
+//
+// typealias Closure = (UIImage) -> ()
+
 /// Ячейка фильма экрана первого
 final class FilmTableViewCell: UITableViewCell {
     private var nameLabel: UILabel = {
@@ -24,6 +30,14 @@ final class FilmTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
+//    private lazy var changeBackGroundButton: UIButton = {
+//        let button = UIButton()
+//        button.backgroundColor = .blue
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.addTarget(self, action: #selector(changeBackgroundAction), for: .touchUpInside)
+//        return button
+//    }()
 
     private var filmImageView: UIImageView = {
         let imageView = UIImageView()
@@ -63,6 +77,9 @@ final class FilmTableViewCell: UITableViewCell {
         return view
     }()
 
+//    private var closure: Closure?
+//    weak var delegate: ChangeBackgroundDelegate?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -80,6 +97,7 @@ final class FilmTableViewCell: UITableViewCell {
         descriptionLabel.text = data.overview
         rateLabel.text = "\(data.rate)"
         filmImageView.loadImage(with: data.poster)
+//        self.closure = closure
     }
 
     private func setupUI() {
@@ -90,52 +108,56 @@ final class FilmTableViewCell: UITableViewCell {
         boxView.addSubview(filmImageView)
         filmImageView.addSubview(rateView)
         rateView.addSubview(rateLabel)
-        createImageConstraint()
-        createBoxViewConstraint()
-        createNameLabelConstraint()
-        createDescriptinConstraint()
-        createRateViewConstraint()
-        createRateLabelConstraint()
+        createConstraints()
+
+//        boxView.addSubview(changeBackGroundButton)
+//        createChangeButoonConstraint()
     }
 
-    private func createBoxViewConstraint() {
-        boxView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
-        boxView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
-        boxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
-        boxView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
-        boxView.heightAnchor.constraint(equalToConstant: filmImageView.bounds.height + 20).isActive = true
-    }
+    private func createConstraints() {
+        NSLayoutConstraint.activate([
+        boxView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+        boxView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+        boxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+        boxView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
+        boxView.heightAnchor.constraint(equalToConstant: filmImageView.bounds.height + 20),
 
-    private func createImageConstraint() {
-        filmImageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 0).isActive = true
-        filmImageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 0).isActive = true
-        filmImageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: 0).isActive = true
-        filmImageView.widthAnchor.constraint(equalTo: filmImageView.heightAnchor, multiplier: 0.7).isActive = true
-    }
+        filmImageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 0),
+        filmImageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 0),
+        filmImageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: 0),
+        filmImageView.widthAnchor.constraint(equalTo: filmImageView.heightAnchor, multiplier: 0.7),
 
-    private func createNameLabelConstraint() {
-        nameLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 10).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: filmImageView.trailingAnchor, constant: 20).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20).isActive = true
-    }
+//    private func createChangeButoonConstraint() {
+//        changeBackGroundButton.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 10).isActive = true
+//        changeBackGroundButton.leadingAnchor.constraint(equalTo: filmImageView.trailingAnchor, constant: 20)
+//            .isActive = true
+//        changeBackGroundButton.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20).isActive = true
+//        changeBackGroundButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//    }
 
-    private func createDescriptinConstraint() {
-        descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: filmImageView.trailingAnchor, constant: 10).isActive = true
-        descriptionLabel.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -10).isActive = true
-        descriptionLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -10).isActive = true
-    }
+//    @objc private func changeBackgroundAction() {
+//        closure?(filmImageView.image ?? UIImage())
+        ////        delegate?.changeBackground(image: filmImageView.image ?? UIImage())
+//        print(#function)
+//    }
 
-    private func createRateViewConstraint() {
-        rateView.leadingAnchor.constraint(equalTo: filmImageView.leadingAnchor, constant: -5).isActive = true
-        rateView.topAnchor.constraint(equalTo: filmImageView.topAnchor, constant: -5).isActive = true
-        rateView.widthAnchor.constraint(equalToConstant: 45).isActive = true
-        rateView.heightAnchor.constraint(equalTo: rateView.widthAnchor, multiplier: 0.8).isActive = true
-    }
+        nameLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 10),
+        nameLabel.leadingAnchor.constraint(equalTo: filmImageView.trailingAnchor, constant: 20),
+        nameLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
 
-    private func createRateLabelConstraint() {
-        rateLabel.centerYAnchor.constraint(equalTo: rateView.centerYAnchor, constant: 2.5).isActive = true
-        rateLabel.centerXAnchor.constraint(equalTo: rateView.centerXAnchor, constant: 2.5).isActive = true
-        rateLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0),
+        descriptionLabel.leadingAnchor.constraint(equalTo: filmImageView.trailingAnchor, constant: 10),
+        descriptionLabel.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -10),
+        descriptionLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -10),
+
+        rateView.leadingAnchor.constraint(equalTo: filmImageView.leadingAnchor, constant: -5),
+        rateView.topAnchor.constraint(equalTo: filmImageView.topAnchor, constant: -5),
+        rateView.widthAnchor.constraint(equalToConstant: 45),
+        rateView.heightAnchor.constraint(equalTo: rateView.widthAnchor, multiplier: 0.8),
+
+        rateLabel.centerYAnchor.constraint(equalTo: rateView.centerYAnchor, constant: 2.5),
+        rateLabel.centerXAnchor.constraint(equalTo: rateView.centerXAnchor, constant: 2.5),
+        rateLabel.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
 }

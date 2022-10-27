@@ -96,13 +96,17 @@ final class MoviesViewController: UIViewController {
     private var films: [FilmInfo] = []
     private var page = 1
 
+    lazy var closure: ((UIImage) -> ())? = { [weak self] image in
+        self?.tableView.backgroundView = UIImageView(image: image)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         navigationItem.title = Constants.movies
         tableView.dataSource = self
         tableView.delegate = self
-        service.loadFilms(page: 1, api: MovieRequestTypes.popular) { [weak self] result in
+        service.loadFilms(page: 1, api: PurchaseEndPoint.popular) { [weak self] result in
             self?.films = result.results
             self?.pageInfo = result.pageCount
             DispatchQueue.main.async {
@@ -120,13 +124,7 @@ final class MoviesViewController: UIViewController {
         view.addSubview(leftButton)
         view.addSubview(rightButton)
         view.addSubview(pageLabel)
-        createTableViewConstraint()
-        createPopularButtonConstraint()
-        createTopRatedButtonConstraint()
-        createUpcomingConstraint()
-        createLeftButtonConstraint()
-        createRightButtonConstraint()
-        createPageLabelConstraint()
+        createConstraint()
     }
 
     @objc private func changePage(sender: UIButton) {
@@ -152,62 +150,38 @@ final class MoviesViewController: UIViewController {
         }
     }
 
-    private func createTableViewConstraint() {
+    private func createConstraint() {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: popularButton.bottomAnchor, constant: 10),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
-        ])
-    }
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
 
-    private func createPopularButtonConstraint() {
-        NSLayoutConstraint.activate([
             popularButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             popularButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             popularButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            popularButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
+            popularButton.heightAnchor.constraint(equalToConstant: 40),
 
-    private func createTopRatedButtonConstraint() {
-        NSLayoutConstraint.activate([
             topRatedButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             topRatedButton.leadingAnchor.constraint(equalTo: popularButton.trailingAnchor, constant: 20),
             topRatedButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            topRatedButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
+            topRatedButton.heightAnchor.constraint(equalToConstant: 40),
 
-    private func createUpcomingConstraint() {
-        NSLayoutConstraint.activate([
             upcomingButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             upcomingButton.leadingAnchor.constraint(equalTo: topRatedButton.trailingAnchor, constant: 20),
             upcomingButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            upcomingButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
+            upcomingButton.heightAnchor.constraint(equalToConstant: 40),
 
-    private func createLeftButtonConstraint() {
-        NSLayoutConstraint.activate([
             leftButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
             leftButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 120),
             leftButton.widthAnchor.constraint(equalToConstant: 40),
-            leftButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
+            leftButton.heightAnchor.constraint(equalToConstant: 40),
 
-    private func createRightButtonConstraint() {
-        NSLayoutConstraint.activate([
             rightButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
             rightButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.frame.width - 160),
             rightButton.widthAnchor.constraint(equalToConstant: 40),
-            rightButton.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
+            rightButton.heightAnchor.constraint(equalToConstant: 40),
 
-    private func createPageLabelConstraint() {
-        NSLayoutConstraint.activate([
             pageLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
             pageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             pageLabel.widthAnchor.constraint(equalToConstant: 40),
@@ -224,7 +198,7 @@ final class MoviesViewController: UIViewController {
     @objc private func updateTableView(sender: UIButton) {
         reloadButtons()
         sender.backgroundColor = .systemGray
-        var category: MovieRequestTypes {
+        var category: PurchaseEndPoint {
             switch sender.tag {
             case 0: return .popular
             case 1: return .topRated
@@ -257,6 +231,8 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
             for: indexPath
         ) as? FilmTableViewCell {
             cell.setupData(data: films[indexPath.row])
+//            cell.delegate = self
+            cell.backgroundColor = .clear
             return cell
         }
         return UITableViewCell()
@@ -265,4 +241,20 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         240
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let row = indexPath.row
+        let fvc = FilmViewController()
+        fvc.filmIndex = films[row].id
+        navigationController?.pushViewController(fvc, animated: true)
+    }
 }
+
+//
+// extension MoviesViewController: ChangeBackgroundDelegate {
+//    func changeBackground(image: UIImage) {
+//        tableView.backgroundView = UIImageView(image: image)
+//    }
+// }

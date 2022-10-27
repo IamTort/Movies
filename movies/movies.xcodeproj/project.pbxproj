@@ -17,6 +17,10 @@
 		FAD4442529072486006E71AF /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442429072486006E71AF /* Service.swift */; };
 		FAD44429290735B3006E71AF /* FilmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44428290735B3006E71AF /* FilmTableViewCell.swift */; };
 		FAD4442B2907C77C006E71AF /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442A2907C77C006E71AF /* Extension.swift */; };
+		FAD4442D2909743E006E71AF /* FilmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442C2909743E006E71AF /* FilmViewController.swift */; };
+		FAD4442F290A9B55006E71AF /* Film.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442E290A9B55006E71AF /* Film.swift */; };
+		FAD44431290B1407006E71AF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44430290B1407006E71AF /* WebViewController.swift */; };
+		FAD44433290B28E4006E71AF /* VideoId.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44432290B28E4006E71AF /* VideoId.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +36,10 @@
 		FAD4442429072486006E71AF /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		FAD44428290735B3006E71AF /* FilmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmTableViewCell.swift; sourceTree = "<group>"; };
 		FAD4442A2907C77C006E71AF /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		FAD4442C2909743E006E71AF /* FilmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmViewController.swift; sourceTree = "<group>"; };
+		FAD4442E290A9B55006E71AF /* Film.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Film.swift; sourceTree = "<group>"; };
+		FAD44430290B1407006E71AF /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		FAD44432290B28E4006E71AF /* VideoId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoId.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,14 +75,18 @@
 				FAD4440B2906E5AF006E71AF /* AppDelegate.swift */,
 				FAD4440D2906E5AF006E71AF /* SceneDelegate.swift */,
 				FAD4440F2906E5AF006E71AF /* MoviesViewController.swift */,
+				FAD44428290735B3006E71AF /* FilmTableViewCell.swift */,
 				FAD444112906E5AF006E71AF /* Main.storyboard */,
 				FAD444142906E5B1006E71AF /* Assets.xcassets */,
 				FAD444162906E5B1006E71AF /* LaunchScreen.storyboard */,
 				FAD444192906E5B1006E71AF /* Info.plist */,
 				FAD444222907234E006E71AF /* FilmInfo.swift */,
-				FAD4442429072486006E71AF /* Service.swift */,
-				FAD44428290735B3006E71AF /* FilmTableViewCell.swift */,
 				FAD4442A2907C77C006E71AF /* Extension.swift */,
+				FAD4442C2909743E006E71AF /* FilmViewController.swift */,
+				FAD4442429072486006E71AF /* Service.swift */,
+				FAD4442E290A9B55006E71AF /* Film.swift */,
+				FAD44430290B1407006E71AF /* WebViewController.swift */,
+				FAD44432290B28E4006E71AF /* VideoId.swift */,
 			);
 			path = movies;
 			sourceTree = "<group>";
@@ -194,11 +206,15 @@
 			files = (
 				FAD444102906E5AF006E71AF /* MoviesViewController.swift in Sources */,
 				FAD444232907234E006E71AF /* FilmInfo.swift in Sources */,
+				FAD4442D2909743E006E71AF /* FilmViewController.swift in Sources */,
+				FAD44431290B1407006E71AF /* WebViewController.swift in Sources */,
 				FAD4442B2907C77C006E71AF /* Extension.swift in Sources */,
 				FAD4442529072486006E71AF /* Service.swift in Sources */,
 				FAD44429290735B3006E71AF /* FilmTableViewCell.swift in Sources */,
 				FAD4440C2906E5AF006E71AF /* AppDelegate.swift in Sources */,
+				FAD4442F290A9B55006E71AF /* Film.swift in Sources */,
 				FAD4440E2906E5AF006E71AF /* SceneDelegate.swift in Sources */,
+				FAD44433290B28E4006E71AF /* VideoId.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
