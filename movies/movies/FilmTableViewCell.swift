@@ -10,6 +10,7 @@ final class FilmTableViewCell: UITableViewCell {
     private enum Constants {
         static let nameFont = "Helvetica-Bold"
         static let errorMessage = "init(coder:) has not been implemented"
+        static let green = "green"
     }
 
     // MARK: - Private Visual Components
@@ -44,9 +45,7 @@ final class FilmTableViewCell: UITableViewCell {
     private var rateView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
-        view.backgroundColor = UIColor(named: "green")
-//        view.layer.borderColor = UIColor.gray.cgColor
-//        view.layer.borderWidth = 2
+        view.backgroundColor = UIColor(named: Constants.green)
         view.layer.cornerRadius = 5
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -55,7 +54,6 @@ final class FilmTableViewCell: UITableViewCell {
     private var rateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: Constants.nameFont, size: 14)
-//        label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = UIColor.white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -64,11 +62,7 @@ final class FilmTableViewCell: UITableViewCell {
 
     private var boxView: UIView = {
         let view = UIView()
-//        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.layer.cornerRadius = 10
-//        view.backgroundColor = .lightGray
-//        view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.gray.cgColor
         return view
     }()

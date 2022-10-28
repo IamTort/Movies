@@ -163,7 +163,6 @@ final class FilmViewController: UIViewController {
 
     // MARK: - LifeCycle
 
-    private let refreshContrl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
