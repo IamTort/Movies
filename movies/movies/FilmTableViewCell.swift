@@ -37,7 +37,6 @@ final class FilmTableViewCell: UITableViewCell {
 
     private var filmImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
