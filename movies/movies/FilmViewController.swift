@@ -3,13 +3,26 @@
 
 import UIKit
 
-/// rjynhjkkth
-class FilmViewController: UIViewController {
-    var filmIndex: Int?
-    private let service = Service()
-    private var filmInfo: Film?
+/// Экран "информация о фильме"
+final class FilmViewController: UIViewController {
+    // MARK: - Private Enum
 
-    private lazy var titleLabel: UILabel = {
+    private enum Constants {
+        static let starImageName = "star"
+        static let rateLabelFont = "Helvetica"
+        static let taglineLabelFont = "Avenir-Oblique"
+        static let descriptionTitleText = "Обзор"
+        static let descriptionTitleFont = "Avenir-Medium"
+        static let rightImageName = "right"
+        static let trailerLabelText = "Посмотреть трейлер"
+        static let trailerLabelFont = "Avenir-Medium"
+        static let dot = " \u{2022} "
+        static let imdbFullRate = "/10 IMDb"
+    }
+
+    // MARK: - Private Visual Components
+
+    private var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +56,7 @@ class FilmViewController: UIViewController {
 
     private var starImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "star")
+        imageView.image = UIImage(named: Constants.starImageName)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -51,7 +64,7 @@ class FilmViewController: UIViewController {
     private lazy var rateLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemGray
-        label.font = UIFont(name: "Helvetica", size: 17)
+        label.font = UIFont(name: Constants.rateLabelFont, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -61,16 +74,16 @@ class FilmViewController: UIViewController {
         label.textColor = .systemGray
         label.numberOfLines = 0
         label.textAlignment = .natural
-        label.font = UIFont(name: "Avenir-Oblique", size: 17)
+        label.font = UIFont(name: Constants.taglineLabelFont, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    private lazy var descriptinLabel: UILabel = {
+    private lazy var descriptionTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Обзор"
+        label.text = Constants.descriptionTitleText
         label.textColor = .black
-        label.font = UIFont(name: "Avenir-Medium", size: 22)
+        label.font = UIFont(name: Constants.descriptionTitleFont, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -80,6 +93,8 @@ class FilmViewController: UIViewController {
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
+
+        label.contentCompressionResistancePriority(for: .vertical)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -101,6 +116,14 @@ class FilmViewController: UIViewController {
         return label
     }()
 
+    private var bottomView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private lazy var webViewButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
@@ -111,7 +134,7 @@ class FilmViewController: UIViewController {
     }()
 
     private var rightImageView: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "right"))
+        let image = UIImageView(image: UIImage(named: Constants.rightImageName))
         image.image?.withTintColor(.black, renderingMode: .alwaysTemplate)
         image.clipsToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -120,8 +143,8 @@ class FilmViewController: UIViewController {
 
     private lazy var trailerLabel: UIButton = {
         let label = UIButton(type: .custom)
-        label.setTitle("Посмотреть трейлер", for: .normal)
-        label.titleLabel?.font = UIFont(name: "Avenir-Medium", size: 22)
+        label.setTitle(Constants.trailerLabelText, for: .normal)
+        label.titleLabel?.font = UIFont(name: Constants.trailerLabelFont, size: 22)
         label.titleLabel?.textColor = .white
         label.addTarget(self, action: #selector(goWebViewAction), for: .touchUpInside)
         label.isUserInteractionEnabled = true
@@ -129,32 +152,56 @@ class FilmViewController: UIViewController {
         return label
     }()
 
+    // MARK: - Private property
+
+    private let service = Service()
+    private var filmInfo: Film?
+
+    // MARK: - Public property
+
+    var filmIndex: Int?
+
+    // MARK: - LifeCycle
+
+    private let refreshContrl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setupUI()
+        loadFilmData()
+    }
+
+    // MARK: - Private methods
+
+    private func loadFilmData() {
+        guard let index = filmIndex else { return }
+        service.loadFilm(index: index) { [weak self] result in
+            self?.filmInfo = result
+            DispatchQueue.main.async {
+                self?.navigationItem.title = result.title
+                self?.setupData(data: result)
+            }
+        }
+    }
+
+    private func setupUI() {
+        view.backgroundColor = .systemGray5
         view.addSubview(titleLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(bottomView)
         view.addSubview(filmImageView)
         view.addSubview(scrollView)
         filmImageView.addSubview(webViewButton)
         filmImageView.addSubview(trailerLabel)
+        webViewButton.addSubview(rightImageView)
         scrollView.addSubview(boxView)
         boxView.addSubview(titleLabel)
         boxView.addSubview(starImageView)
         boxView.addSubview(rateLabel)
         boxView.addSubview(taglineLabel)
-        boxView.addSubview(descriptinLabel)
+        boxView.addSubview(descriptionTitleLabel)
         boxView.addSubview(descriptionLabel)
         boxView.addSubview(genresLabel)
-        webViewButton.addSubview(rightImageView)
         createConstraint()
-        guard let index = filmIndex else { return }
-        service.loadFilm(index: index) { [weak self] result in
-            self?.filmInfo = result
-            DispatchQueue.main.async {
-                self?.setupData(data: result)
-            }
-        }
     }
 
     private func createConstraint() {
@@ -172,8 +219,13 @@ class FilmViewController: UIViewController {
             boxView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
             boxView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             boxView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            boxView.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
             boxView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
-//            boxView.heightAnchor.constraint(equalToConstant: 1000),
+
+            bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            bottomView.heightAnchor.constraint(equalToConstant: 400),
 
             titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 25),
             titleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
@@ -195,13 +247,13 @@ class FilmViewController: UIViewController {
             taglineLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
             taglineLabel.widthAnchor.constraint(equalTo: boxView.widthAnchor, constant: -40),
 
-            descriptinLabel.topAnchor.constraint(equalTo: taglineLabel.bottomAnchor, constant: 8),
-            descriptinLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
+            descriptionTitleLabel.topAnchor.constraint(equalTo: taglineLabel.bottomAnchor, constant: 8),
+            descriptionTitleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
 
-            descriptionLabel.topAnchor.constraint(equalTo: descriptinLabel.bottomAnchor, constant: 8),
+            descriptionLabel.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
-            descriptionLabel.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -20),
+            descriptionLabel.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: 20),
 
             webViewButton.leadingAnchor.constraint(equalTo: filmImageView.leadingAnchor, constant: 10),
             webViewButton.topAnchor.constraint(equalTo: filmImageView.topAnchor, constant: 250),
@@ -223,11 +275,11 @@ class FilmViewController: UIViewController {
         filmImageView.loadImage(with: data.poster)
         titleLabel.attributedText = NSMutableAttributedString().normal("\(data.title) ")
             .normalGray("(\(data.release.prefix(4)))")
-        rateLabel.text = "\(data.rate)/10 IMDb"
+        rateLabel.text = "\(data.rate)" + Constants.imdbFullRate
         taglineLabel.text = "\(data.tagline)"
         descriptionLabel.text = data.overview
         genresLabel.text = data.genres.map(\.name)
-            .joined(separator: ", ") + " \u{2022} " + "\((data.runtime) / 60) ч \((data.runtime) % 60) мин"
+            .joined(separator: ", ") + Constants.dot + "\((data.runtime) / 60) ч \((data.runtime) % 60) мин"
     }
 
     @objc private func goWebViewAction() {

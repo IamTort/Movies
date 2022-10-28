@@ -11,25 +11,56 @@ import UIKit
 import WebKit
 
 /// Экран вебвью
-class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
-    lazy var webView: WKWebView = {
-        let wv = WKWebView()
-        wv.uiDelegate = self
-        wv.navigationDelegate = self
-        wv.translatesAutoresizingMaskIntoConstraints = false
-        return wv
+final class WebViewController: UIViewController {
+    // MARK: - Private Enum
+
+    private enum Constants {
+        static let urlShemeHostPath = "https://www.themoviedb.org/movie/"
+        static let urlFragment = "#play="
+    }
+
+    // MARK: - Private Visual Components
+
+    private lazy var webView: WKWebView = {
+        let webView = WKWebView()
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
     }()
+
+    // MARK: - Private property
 
     private let service = Service()
     private var filmInfo: [VideoId]?
+
+    // MARK: - Public property
+
     var filmIndex: Int?
+
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadWebViewData()
+        setupUI()
+    }
+
+    // MARK: - Private methods
+
+    private func setupUI() {
+        view.backgroundColor = .white
+        view.addSubview(webView)
+        createConstraints()
+    }
+
+    private func loadWebViewData() {
         guard let index = filmIndex else { return }
         service.loadVideos(index: index) { result in
 
             guard result.count != 0,
-                  let url = URL(string: "https://www.themoviedb.org/movie/\(index)#play=\(result[0].key)")
+                  let url =
+                  URL(string: Constants.urlShemeHostPath + "\(index)" + Constants.urlFragment + "\(result[0].key)")
             else {
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
@@ -40,10 +71,9 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
                 self.webView.load(URLRequest(url: url))
             }
         }
+    }
 
-        view.backgroundColor = .white
-
-        view.addSubview(webView)
+    private func createConstraints() {
         NSLayoutConstraint.activate([
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -52,3 +82,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         ])
     }
 }
+
+// MARK: - WKNavigationDelegate, WKUIDelegate
+
+extension WebViewController: WKNavigationDelegate, WKUIDelegate {}

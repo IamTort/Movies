@@ -3,13 +3,12 @@
 
 import Foundation
 
-
-/// Model
+/// Модель массива информации о видео
 struct ResultVideos: Decodable {
     let results: [VideoId]
 }
 
-/// Model
+/// Ключ от видео
 struct VideoId: Decodable {
     let key: String
 }

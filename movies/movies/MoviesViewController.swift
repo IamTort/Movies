@@ -5,54 +5,30 @@ import UIKit
 
 ///  Контроллер экрана Фильмы
 final class MoviesViewController: UIViewController {
+    // MARK: - Private Enum
+
     private enum Constants {
-        static let popular = "Popular"
-        static let topRated = "Top Rated"
-        static let upcoming = "Upcoming"
+        static let popular = "Популярное"
+        static let topRated = "Топ"
+        static let upcoming = "Скоро"
         static let cellIdentifier = "cell"
         static let chevronLeftImageName = "chevron.left"
         static let chevronRightImageName = "chevron.right"
-        static let movies = "Movies"
-        static let page = "1"
+        static let movies = "Фильмы"
+        static let keyValue = "a5b0bb6ebe58602d88ccf2463076122b"
+        static let key = "apiKey"
     }
 
-    private lazy var popularButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(Constants.popular, for: .normal)
-        button.backgroundColor = .systemGray
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 15
-        button.tag = 0
-        button.addTarget(self, action: #selector(updateTableView), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    // MARK: - Private Visual Components
 
-    private lazy var topRatedButton: UIButton = {
-        let button = UIButton()
-        button.tag = 1
-        button.addTarget(self, action: #selector(updateTableView), for: .touchUpInside)
-        button.setTitle(Constants.topRated, for: .normal)
-        button.backgroundColor = .systemGray3
-        button.layer.cornerRadius = 15
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.borderWidth = 2
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private lazy var upcomingButton: UIButton = {
-        let button = UIButton()
-        button.setTitle(Constants.upcoming, for: .normal)
-        button.backgroundColor = .systemGray3
-        button.tag = 2
-        button.addTarget(self, action: #selector(updateTableView), for: .touchUpInside)
-        button.layer.cornerRadius = 15
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.borderWidth = 2
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private lazy var segmentedControl: UISegmentedControl = {
+        let segment = UISegmentedControl(items: items)
+        segment.tintColor = UIColor.black
+        segment.selectedSegmentIndex = 0
+        segment.selectedSegmentTintColor = .systemGray2
+        segment.addTarget(self, action: #selector(updateTableView), for: .allEvents)
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        return segment
     }()
 
     private var tableView: UITableView = {
@@ -62,50 +38,26 @@ final class MoviesViewController: UIViewController {
         return tableView
     }()
 
-    private lazy var leftButton: UIButton = {
-        let button = UIButton()
-        button.tag = 0
-        button.scalesLargeContentImage = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: Constants.chevronLeftImageName), for: .normal)
-        button.addTarget(self, action: #selector(changePage), for: .touchUpInside)
-        return button
-    }()
+    // MARK: - Private property
 
-    private lazy var rightButton: UIButton = {
-        let button = UIButton()
-        button.scalesLargeContentImage = true
-        button.tag = 1
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: Constants.chevronRightImageName), for: .normal)
-        button.addTarget(self, action: #selector(changePage), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "\(page)"
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
+    private let items = [Constants.popular, Constants.topRated, Constants.upcoming]
     private let service = Service()
     private var pageInfo: Int?
     private var films: [FilmInfo] = []
     private var page = 1
 
-    lazy var closure: ((UIImage) -> ())? = { [weak self] image in
-        self?.tableView.backgroundView = UIImageView(image: image)
-    }
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadFilmsData()
         setupUI()
-        navigationItem.title = Constants.movies
-        tableView.dataSource = self
-        tableView.delegate = self
+    }
+
+    // MARK: - Private methods
+
+    private func loadFilmsData() {
+        UserDefaults.standard.set(Constants.keyValue, forKey: Constants.key)
         service.loadFilms(page: 1, api: PurchaseEndPoint.popular) { [weak self] result in
             self?.films = result.results
             self?.pageInfo = result.pageCount
@@ -116,34 +68,18 @@ final class MoviesViewController: UIViewController {
     }
 
     private func setupUI() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        navigationItem.title = Constants.movies
         view.backgroundColor = .white
-        view.addSubview(popularButton)
-        view.addSubview(topRatedButton)
-        view.addSubview(upcomingButton)
         view.addSubview(tableView)
-        view.addSubview(leftButton)
-        view.addSubview(rightButton)
-        view.addSubview(pageLabel)
+        view.addSubview(segmentedControl)
         createConstraint()
     }
 
-    @objc private func changePage(sender: UIButton) {
-        guard let pageInfo = pageInfo else { return }
-
-        switch sender.tag {
-        case 0:
-            guard page > 1 else { return }
-            page -= 1
-        case 1:
-            guard page < pageInfo else { return }
-            page += 1
-        default:
-            break
-        }
-        pageLabel.text = "\(page)"
+    private func loadMore(page: Int) {
         service.loadFilms(page: page) { [weak self] result in
-            self?.films = result.results
-            self?.pageInfo = result.pageCount
+            self?.films += result.results
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
@@ -152,54 +88,22 @@ final class MoviesViewController: UIViewController {
 
     private func createConstraint() {
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: popularButton.bottomAnchor, constant: 10),
+            tableView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 10),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
 
-            popularButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            popularButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            popularButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            popularButton.heightAnchor.constraint(equalToConstant: 40),
+            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            segmentedControl.heightAnchor.constraint(equalToConstant: 40)
 
-            topRatedButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            topRatedButton.leadingAnchor.constraint(equalTo: popularButton.trailingAnchor, constant: 20),
-            topRatedButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            topRatedButton.heightAnchor.constraint(equalToConstant: 40),
-
-            upcomingButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            upcomingButton.leadingAnchor.constraint(equalTo: topRatedButton.trailingAnchor, constant: 20),
-            upcomingButton.widthAnchor.constraint(equalToConstant: (view.bounds.width - 80) / 3),
-            upcomingButton.heightAnchor.constraint(equalToConstant: 40),
-
-            leftButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
-            leftButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 120),
-            leftButton.widthAnchor.constraint(equalToConstant: 40),
-            leftButton.heightAnchor.constraint(equalToConstant: 40),
-
-            rightButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
-            rightButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.frame.width - 160),
-            rightButton.widthAnchor.constraint(equalToConstant: 40),
-            rightButton.heightAnchor.constraint(equalToConstant: 40),
-
-            pageLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
-            pageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
-            pageLabel.widthAnchor.constraint(equalToConstant: 40),
-            pageLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 
-    private func reloadButtons() {
-        popularButton.backgroundColor = .systemGray3
-        topRatedButton.backgroundColor = .systemGray3
-        upcomingButton.backgroundColor = .systemGray3
-    }
-
-    @objc private func updateTableView(sender: UIButton) {
-        reloadButtons()
-        sender.backgroundColor = .systemGray
+    @objc private func updateTableView() {
         var category: PurchaseEndPoint {
-            switch sender.tag {
+            switch segmentedControl.selectedSegmentIndex {
             case 0: return .popular
             case 1: return .topRated
             case 2: return .upcoming
@@ -209,16 +113,33 @@ final class MoviesViewController: UIViewController {
         }
 
         service.loadFilms(page: 1, api: category) { [weak self] result in
-            self?.page = 1
             self?.pageInfo = result.pageCount
             self?.films = result.results
             DispatchQueue.main.async {
-                self?.pageLabel.text = Constants.page
+                self?.tableView.setContentOffset(.zero, animated: true)
                 self?.tableView.reloadData()
             }
         }
     }
+
+    // MARK: - Public method
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+        let deltaOffset = maximumOffset - currentOffset
+
+        guard let pageInfo = pageInfo else {
+            return
+        }
+        if deltaOffset <= 0, page < pageInfo {
+            page += 1
+            loadMore(page: page)
+        }
+    }
 }
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -231,8 +152,6 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
             for: indexPath
         ) as? FilmTableViewCell {
             cell.setupData(data: films[indexPath.row])
-//            cell.delegate = self
-            cell.backgroundColor = .clear
             return cell
         }
         return UITableViewCell()
@@ -251,10 +170,3 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(fvc, animated: true)
     }
 }
-
-//
-// extension MoviesViewController: ChangeBackgroundDelegate {
-//    func changeBackground(image: UIImage) {
-//        tableView.backgroundView = UIImageView(image: image)
-//    }
-// }

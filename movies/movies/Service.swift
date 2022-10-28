@@ -10,40 +10,54 @@ enum PurchaseEndPoint: String {
     case upcoming = "/3/movie/upcoming"
 }
 
-/// Класс, отвечающий за загрузку даннных с сервера на контроллер "Фильмы"
+/// Класс, отвечающий за загрузку даннных с сервера
 final class Service {
-    // создаем сессию, выполняется только при вызове
+    // MARK: - Private Enum
+
+    private enum Constants {
+        static let queryItemKeyName = "api_key"
+        static let apiValueKeyName = "apiKey"
+        static let queryItemLanguageName = "language"
+        static let queryItemLanguageValue = "ru-Ru"
+        static let queryItemPageName = "page"
+        static let componentScheme = "https"
+        static let componentsHost = "api.themoviedb.org"
+        static let componentsPath = "/3/movie/"
+        static let videos = "/videos"
+    }
+
     private lazy var session: URLSession = {
         let session = URLSession(configuration: .default)
         return session
     }()
 
-    private let apiKey = "a5b0bb6ebe58602d88ccf2463076122b"
+    private let queryItemKey = URLQueryItem(
+        name: Constants.queryItemKeyName,
+        value: UserDefaults.standard.string(forKey: Constants.apiValueKeyName)
+    )
+    private let queryItemLanguage = URLQueryItem(
+        name: Constants.queryItemLanguageName,
+        value: Constants.queryItemLanguageValue
+    )
     private var category = PurchaseEndPoint.popular
 
     func loadFilms(page: Int, completion: @escaping (Result) -> Void) {
         loadFilms(page: page, api: category, completion: completion)
     }
 
-    // метод для загрузки данных, с замыканием
     func loadFilms(page: Int, api: PurchaseEndPoint, completion: @escaping (Result) -> Void) {
         category = api
 
-        let queryItemKey = URLQueryItem(name: "api_key", value: apiKey)
-        let queryItemLanguage = URLQueryItem(name: "language", value: "ru-Ru")
-        let queryItemPage = URLQueryItem(name: "page", value: "\(page)")
+        let queryItemPage = URLQueryItem(name: Constants.queryItemPageName, value: "\(page)")
 
         var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.themoviedb.org"
+        components.scheme = Constants.componentScheme
+        components.host = Constants.componentsHost
         components.path = api.rawValue
         components.queryItems = [queryItemKey, queryItemLanguage, queryItemPage]
         guard let url = components.url else { return }
         let task = session.dataTask(with: url) { data, _, _ in
-            guard let data = data else {
-                return
-            }
-            // десериализируем данные и закидываем в модель
+            guard let data = data else { return }
             do {
                 let result = try JSONDecoder().decode(Result.self, from: data)
                 completion(result)
@@ -55,22 +69,16 @@ final class Service {
     }
 
     func loadFilm(index: Int, completion: @escaping (Film) -> Void) {
-        let queryItemKey = URLQueryItem(name: "api_key", value: apiKey)
-        let queryItemLanguage = URLQueryItem(name: "language", value: "ru-Ru")
-
         var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.themoviedb.org"
-        components.path = "/3/movie/\(index)"
+        components.scheme = Constants.componentScheme
+        components.host = Constants.componentsHost
+        components.path = Constants.componentsPath + "\(index)"
         components.queryItems = [queryItemKey, queryItemLanguage]
 
         guard let url = components.url else { return }
         print(url)
         let task = session.dataTask(with: url) { data, _, _ in
-            guard let data = data else {
-                return
-            }
-            // десериализируем данные и закидываем в модель
+            guard let data = data else { return }
             do {
                 let result = try JSONDecoder().decode(Film.self, from: data)
                 completion(result)
@@ -82,22 +90,16 @@ final class Service {
     }
 
     func loadVideos(index: Int, completion: @escaping ([VideoId]) -> Void) {
-        let queryItemKey = URLQueryItem(name: "api_key", value: apiKey)
-        let queryItemLanguage = URLQueryItem(name: "language", value: "ru-Ru")
-
         var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.themoviedb.org"
-        components.path = "/3/movie/\(index)/videos"
+        components.scheme = Constants.componentScheme
+        components.host = Constants.componentsHost
+        components.path = Constants.componentsPath + "\(index)" + Constants.videos
         components.queryItems = [queryItemKey, queryItemLanguage]
 
         guard let url = components.url else { return }
         print(url)
         let task = session.dataTask(with: url) { data, _, _ in
-            guard let data = data else {
-                return
-            }
-            // десериализируем данные и закидываем в модель
+            guard let data = data else { return }
             do {
                 let result = try JSONDecoder().decode(ResultVideos.self, from: data)
                 completion(result.results)
