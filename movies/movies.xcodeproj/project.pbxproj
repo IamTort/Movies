@@ -9,21 +9,39 @@
 /* Begin PBXBuildFile section */
 		FAD4440C2906E5AF006E71AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4440B2906E5AF006E71AF /* AppDelegate.swift */; };
 		FAD4440E2906E5AF006E71AF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4440D2906E5AF006E71AF /* SceneDelegate.swift */; };
-		FAD444102906E5AF006E71AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4440F2906E5AF006E71AF /* ViewController.swift */; };
+		FAD444102906E5AF006E71AF /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4440F2906E5AF006E71AF /* MoviesViewController.swift */; };
 		FAD444132906E5AF006E71AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD444112906E5AF006E71AF /* Main.storyboard */; };
 		FAD444152906E5B1006E71AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD444142906E5B1006E71AF /* Assets.xcassets */; };
 		FAD444182906E5B1006E71AF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD444162906E5B1006E71AF /* LaunchScreen.storyboard */; };
+		FAD444232907234E006E71AF /* FilmInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD444222907234E006E71AF /* FilmInfo.swift */; };
+		FAD4442529072486006E71AF /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442429072486006E71AF /* Service.swift */; };
+		FAD44429290735B3006E71AF /* FilmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44428290735B3006E71AF /* FilmTableViewCell.swift */; };
+		FAD4442B2907C77C006E71AF /* UIImageView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442A2907C77C006E71AF /* UIImageView + Extension.swift */; };
+		FAD4442D2909743E006E71AF /* FilmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442C2909743E006E71AF /* FilmViewController.swift */; };
+		FAD4442F290A9B55006E71AF /* Film.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4442E290A9B55006E71AF /* Film.swift */; };
+		FAD44431290B1407006E71AF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44430290B1407006E71AF /* WebViewController.swift */; };
+		FAD44433290B28E4006E71AF /* VideoId.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44432290B28E4006E71AF /* VideoId.swift */; };
+		FAD44455290FB6B8006E71AF /* NSMutableAttributedString + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD44454290FB6B8006E71AF /* NSMutableAttributedString + Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FAD444082906E5AF006E71AF /* movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD4440B2906E5AF006E71AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAD4440D2906E5AF006E71AF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FAD4440F2906E5AF006E71AF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FAD4440F2906E5AF006E71AF /* MoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewController.swift; sourceTree = "<group>"; };
 		FAD444122906E5AF006E71AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FAD444142906E5B1006E71AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD444172906E5B1006E71AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FAD444192906E5B1006E71AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAD444222907234E006E71AF /* FilmInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmInfo.swift; sourceTree = "<group>"; };
+		FAD4442429072486006E71AF /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		FAD44428290735B3006E71AF /* FilmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmTableViewCell.swift; sourceTree = "<group>"; };
+		FAD4442A2907C77C006E71AF /* UIImageView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView + Extension.swift"; sourceTree = "<group>"; };
+		FAD4442C2909743E006E71AF /* FilmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmViewController.swift; sourceTree = "<group>"; };
+		FAD4442E290A9B55006E71AF /* Film.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Film.swift; sourceTree = "<group>"; };
+		FAD44430290B1407006E71AF /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		FAD44432290B28E4006E71AF /* VideoId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoId.swift; sourceTree = "<group>"; };
+		FAD44454290FB6B8006E71AF /* NSMutableAttributedString + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString + Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,13 +76,38 @@
 			children = (
 				FAD4440B2906E5AF006E71AF /* AppDelegate.swift */,
 				FAD4440D2906E5AF006E71AF /* SceneDelegate.swift */,
-				FAD4440F2906E5AF006E71AF /* ViewController.swift */,
 				FAD444112906E5AF006E71AF /* Main.storyboard */,
 				FAD444142906E5B1006E71AF /* Assets.xcassets */,
 				FAD444162906E5B1006E71AF /* LaunchScreen.storyboard */,
 				FAD444192906E5B1006E71AF /* Info.plist */,
+				FAD4440F2906E5AF006E71AF /* MoviesViewController.swift */,
+				FAD44428290735B3006E71AF /* FilmTableViewCell.swift */,
+				FAD4442C2909743E006E71AF /* FilmViewController.swift */,
+				FAD44430290B1407006E71AF /* WebViewController.swift */,
+				FAD4442429072486006E71AF /* Service.swift */,
+				FAD44456290FB946006E71AF /* Model */,
+				FAD44457290FB984006E71AF /* Extension */,
 			);
 			path = movies;
+			sourceTree = "<group>";
+		};
+		FAD44456290FB946006E71AF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FAD444222907234E006E71AF /* FilmInfo.swift */,
+				FAD4442E290A9B55006E71AF /* Film.swift */,
+				FAD44432290B28E4006E71AF /* VideoId.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FAD44457290FB984006E71AF /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FAD44454290FB6B8006E71AF /* NSMutableAttributedString + Extension.swift */,
+				FAD4442A2907C77C006E71AF /* UIImageView + Extension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,6 +120,7 @@
 				FAD444042906E5AF006E71AF /* Sources */,
 				FAD444052906E5AF006E71AF /* Frameworks */,
 				FAD444062906E5AF006E71AF /* Resources */,
+				FAD444212906EA7E006E71AF /* Run Script */,
 				FAD4441F2906E5DE006E71AF /* Run SwiftLint */,
 			);
 			buildRules = (
@@ -153,6 +197,25 @@
 			shellPath = /bin/sh;
 			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		FAD444212906EA7E006E71AF /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftformat >/dev/null; then\n  swiftformat .\nelse\n  echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -160,9 +223,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD444102906E5AF006E71AF /* ViewController.swift in Sources */,
+				FAD444102906E5AF006E71AF /* MoviesViewController.swift in Sources */,
+				FAD444232907234E006E71AF /* FilmInfo.swift in Sources */,
+				FAD4442D2909743E006E71AF /* FilmViewController.swift in Sources */,
+				FAD44431290B1407006E71AF /* WebViewController.swift in Sources */,
+				FAD4442B2907C77C006E71AF /* UIImageView + Extension.swift in Sources */,
+				FAD4442529072486006E71AF /* Service.swift in Sources */,
+				FAD44429290735B3006E71AF /* FilmTableViewCell.swift in Sources */,
 				FAD4440C2906E5AF006E71AF /* AppDelegate.swift in Sources */,
+				FAD4442F290A9B55006E71AF /* Film.swift in Sources */,
 				FAD4440E2906E5AF006E71AF /* SceneDelegate.swift in Sources */,
+				FAD44455290FB6B8006E71AF /* NSMutableAttributedString + Extension.swift in Sources */,
+				FAD44433290B28E4006E71AF /* VideoId.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
