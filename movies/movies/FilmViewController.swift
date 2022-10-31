@@ -106,17 +106,8 @@ final class FilmViewController: UIViewController {
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
-    
-    private lazy var webViewButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .white
-        button.layer.cornerRadius = 20
-        button.addTarget(self, action: #selector(goWebViewAction), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
 
-    private lazy var rateLabel: UILabel = {
+    private let rateLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemGray
         label.font = UIFont(name: Constants.rateLabelFont, size: 17)
@@ -124,7 +115,7 @@ final class FilmViewController: UIViewController {
         return label
     }()
 
-    private lazy var taglineLabel: UILabel = {
+    private let taglineLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemGray
         label.numberOfLines = 0
@@ -134,7 +125,7 @@ final class FilmViewController: UIViewController {
         return label
     }()
 
-    private lazy var descriptionTitleLabel: UILabel = {
+    private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.descriptionTitleText
         label.textColor = .black
@@ -152,6 +143,15 @@ final class FilmViewController: UIViewController {
         label.isUserInteractionEnabled = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+
+    private lazy var webViewButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(goWebViewAction), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
 
     // MARK: - Private property
