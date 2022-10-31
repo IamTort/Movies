@@ -10,15 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        print(getDocumentsDirectory())
-        return true
-    }
-
-    func getDocumentsDirectory() -> URL {
-        FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask
-        )[0]
+        true
     }
 
     // MARK: UISceneSession Lifecycle

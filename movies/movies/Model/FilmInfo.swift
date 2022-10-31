@@ -5,11 +5,11 @@ import Foundation
 
 /// Массив с фильмами
 struct Result: Decodable {
-    let results: [FilmInfo]
+    let filmsInfo: [FilmInfo]
     let pageCount: Int
 
     enum CodingKeys: String, CodingKey {
-        case results
+        case filmsInfo = "results"
         case pageCount = "total_pages"
     }
 }

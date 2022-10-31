@@ -26,7 +26,7 @@ final class MoviesViewController: UIViewController {
         segment.tintColor = UIColor.black
         segment.selectedSegmentIndex = 0
         segment.selectedSegmentTintColor = .systemGray2
-        segment.addTarget(self, action: #selector(updateTableView), for: .allEvents)
+        segment.addTarget(self, action: #selector(updateTableViewAction), for: .allEvents)
         segment.translatesAutoresizingMaskIntoConstraints = false
         return segment
     }()
@@ -41,7 +41,6 @@ final class MoviesViewController: UIViewController {
     // MARK: - Private property
 
     private let items = [Constants.popular, Constants.topRated, Constants.upcoming]
-    private let service = Service()
     private var pageInfo: Int?
     private var films: [FilmInfo] = []
     private var page = 1
@@ -58,8 +57,8 @@ final class MoviesViewController: UIViewController {
 
     private func loadFilmsData() {
         UserDefaults.standard.set(Constants.keyValue, forKey: Constants.key)
-        service.loadFilms(page: 1, api: PurchaseEndPoint.popular) { [weak self] result in
-            self?.films = result.results
+        Service.shared.loadFilms(page: 1, api: PurchaseEndPoint.popular) { [weak self] result in
+            self?.films = result.filmsInfo
             self?.pageInfo = result.pageCount
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
@@ -78,8 +77,8 @@ final class MoviesViewController: UIViewController {
     }
 
     private func loadMore(page: Int) {
-        service.loadFilms(page: page) { [weak self] result in
-            self?.films += result.results
+        Service.shared.loadFilms(page: page) { [weak self] result in
+            self?.films += result.filmsInfo
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
@@ -101,7 +100,7 @@ final class MoviesViewController: UIViewController {
         ])
     }
 
-    @objc private func updateTableView() {
+    @objc private func updateTableViewAction() {
         var category: PurchaseEndPoint {
             switch segmentedControl.selectedSegmentIndex {
             case 0: return .popular
@@ -112,9 +111,9 @@ final class MoviesViewController: UIViewController {
             }
         }
 
-        service.loadFilms(page: 1, api: category) { [weak self] result in
+        Service.shared.loadFilms(page: 1, api: category) { [weak self] result in
             self?.pageInfo = result.pageCount
-            self?.films = result.results
+            self?.films = result.filmsInfo
             DispatchQueue.main.async {
                 self?.tableView.setContentOffset(.zero, animated: true)
                 self?.tableView.reloadData()
@@ -129,13 +128,11 @@ final class MoviesViewController: UIViewController {
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
         let deltaOffset = maximumOffset - currentOffset
 
-        guard let pageInfo = pageInfo else {
-            return
-        }
-        if deltaOffset <= 0, page < pageInfo {
-            page += 1
-            loadMore(page: page)
-        }
+        guard let pageInfo = pageInfo,
+              deltaOffset <= 0,
+              page < pageInfo else { return }
+        page += 1
+        loadMore(page: page)
     }
 }
 

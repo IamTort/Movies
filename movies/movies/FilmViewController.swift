@@ -18,18 +18,20 @@ final class FilmViewController: UIViewController {
         static let trailerLabelFont = "Avenir-Medium"
         static let dot = " \u{2022} "
         static let imdbFullRate = "/10 IMDb"
+        static let hours = "ч"
+        static let minutes = "мин"
     }
 
     // MARK: - Private Visual Components
 
-    private var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    private var filmImageView: UIImageView = {
+    private let filmImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .top
         imageView.clipsToBounds = true
@@ -38,14 +40,14 @@ final class FilmViewController: UIViewController {
         return imageView
     }()
 
-    private var scrollView: UIScrollView = {
+    private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.clipsToBounds = true
         scroll.translatesAutoresizingMaskIntoConstraints = false
         return scroll
     }()
 
-    private var boxView: UIView = {
+    private let boxView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.clipsToBounds = true
@@ -54,11 +56,64 @@ final class FilmViewController: UIViewController {
         return view
     }()
 
-    private var starImageView: UIImageView = {
+    private let starImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: Constants.starImageName)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+
+    private let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.textColor = .black
+
+        label.contentCompressionResistancePriority(for: .vertical)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let genresLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let timeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let bottomView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let rightImageView: UIImageView = {
+        let image = UIImageView(image: UIImage(named: Constants.rightImageName))
+        image.image?.withTintColor(.black, renderingMode: .alwaysTemplate)
+        image.clipsToBounds = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    private lazy var webViewButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(goWebViewAction), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
 
     private lazy var rateLabel: UILabel = {
@@ -88,59 +143,6 @@ final class FilmViewController: UIViewController {
         return label
     }()
 
-    private var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
-
-        label.contentCompressionResistancePriority(for: .vertical)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private var genresLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private var timeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private var bottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var webViewButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .white
-        button.layer.cornerRadius = 20
-        button.addTarget(self, action: #selector(goWebViewAction), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private var rightImageView: UIImageView = {
-        let image = UIImageView(image: UIImage(named: Constants.rightImageName))
-        image.image?.withTintColor(.black, renderingMode: .alwaysTemplate)
-        image.clipsToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
-
     private lazy var trailerLabel: UIButton = {
         let label = UIButton(type: .custom)
         label.setTitle(Constants.trailerLabelText, for: .normal)
@@ -154,7 +156,6 @@ final class FilmViewController: UIViewController {
 
     // MARK: - Private property
 
-    private let service = Service()
     private var filmInfo: Film?
 
     // MARK: - Public property
@@ -173,7 +174,7 @@ final class FilmViewController: UIViewController {
 
     private func loadFilmData() {
         guard let index = filmIndex else { return }
-        service.loadFilm(index: index) { [weak self] result in
+        Service.shared.loadFilm(index: index) { [weak self] result in
             self?.filmInfo = result
             DispatchQueue.main.async {
                 self?.navigationItem.title = result.title
@@ -277,8 +278,9 @@ final class FilmViewController: UIViewController {
         rateLabel.text = "\(data.rate)" + Constants.imdbFullRate
         taglineLabel.text = "\(data.tagline)"
         descriptionLabel.text = data.overview
-        genresLabel.text = data.genres.map(\.name)
-            .joined(separator: ", ") + Constants.dot + "\((data.runtime) / 60) ч \((data.runtime) % 60) мин"
+        genresLabel.text =
+            "\(data.genres.map(\.name).joined(separator: ", ")) \(Constants.dot) \((data.runtime) / 60)" +
+            " \(Constants.hours) \((data.runtime) % 60) \(Constants.minutes)"
     }
 
     @objc private func goWebViewAction() {

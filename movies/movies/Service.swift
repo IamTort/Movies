@@ -3,8 +3,9 @@
 
 import Foundation
 
-/// enum
+/// Типы запросов
 enum PurchaseEndPoint: String {
+    case link = "https://image.tmdb.org/t/p/w500"
     case popular = "/3/movie/popular"
     case topRated = "/3/movie/top_rated"
     case upcoming = "/3/movie/upcoming"
@@ -13,6 +14,8 @@ enum PurchaseEndPoint: String {
 /// Класс, отвечающий за загрузку даннных с сервера
 final class Service {
     // MARK: - Private Enum
+
+    static let shared = Service()
 
     private enum Constants {
         static let queryItemKeyName = "api_key"
@@ -55,17 +58,8 @@ final class Service {
         components.host = Constants.componentsHost
         components.path = api.rawValue
         components.queryItems = [queryItemKey, queryItemLanguage, queryItemPage]
-        guard let url = components.url else { return }
-        let task = session.dataTask(with: url) { data, _, _ in
-            guard let data = data else { return }
-            do {
-                let result = try JSONDecoder().decode(Result.self, from: data)
-                completion(result)
-            } catch {
-                print(error)
-            }
-        }
-        task.resume()
+
+        loadObject(urlComponents: components, completion: completion)
     }
 
     func loadFilm(index: Int, completion: @escaping (Film) -> Void) {
@@ -75,18 +69,7 @@ final class Service {
         components.path = Constants.componentsPath + "\(index)"
         components.queryItems = [queryItemKey, queryItemLanguage]
 
-        guard let url = components.url else { return }
-        print(url)
-        let task = session.dataTask(with: url) { data, _, _ in
-            guard let data = data else { return }
-            do {
-                let result = try JSONDecoder().decode(Film.self, from: data)
-                completion(result)
-            } catch {
-                print(error)
-            }
-        }
-        task.resume()
+        loadObject(urlComponents: components, completion: completion)
     }
 
     func loadVideos(index: Int, completion: @escaping ([VideoId]) -> Void) {
@@ -96,13 +79,21 @@ final class Service {
         components.path = Constants.componentsPath + "\(index)" + Constants.videos
         components.queryItems = [queryItemKey, queryItemLanguage]
 
-        guard let url = components.url else { return }
-        print(url)
+        loadObject(urlComponents: components, completion: ({ (m1: ResultVideos) in
+            completion(m1.results)
+        }))
+    }
+
+    func loadObject<ResponseType: Decodable>(
+        urlComponents: URLComponents,
+        completion: @escaping (ResponseType) -> Void
+    ) {
+        guard let url = urlComponents.url else { return }
         let task = session.dataTask(with: url) { data, _, _ in
             guard let data = data else { return }
             do {
-                let result = try JSONDecoder().decode(ResultVideos.self, from: data)
-                completion(result.results)
+                let result = try JSONDecoder().decode(ResponseType.self, from: data)
+                completion(result)
             } catch {
                 print(error)
             }

@@ -15,7 +15,7 @@ final class FilmTableViewCell: UITableViewCell {
 
     // MARK: - Private Visual Components
 
-    private var nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont(name: Constants.nameFont, size: 17)
@@ -25,7 +25,7 @@ final class FilmTableViewCell: UITableViewCell {
         return label
     }()
 
-    private var descriptionLabel: UILabel = {
+    private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 15)
@@ -35,13 +35,13 @@ final class FilmTableViewCell: UITableViewCell {
         return label
     }()
 
-    private var filmImageView: UIImageView = {
+    private let filmImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
-    private var rateView: UIView = {
+    private let rateView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
         view.backgroundColor = UIColor(named: Constants.green)
@@ -50,7 +50,7 @@ final class FilmTableViewCell: UITableViewCell {
         return view
     }()
 
-    private var rateLabel: UILabel = {
+    private let rateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: Constants.nameFont, size: 14)
         label.textColor = UIColor.white
@@ -59,7 +59,7 @@ final class FilmTableViewCell: UITableViewCell {
         return label
     }()
 
-    private var boxView: UIView = {
+    private let boxView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderColor = UIColor.gray.cgColor
@@ -127,7 +127,7 @@ final class FilmTableViewCell: UITableViewCell {
 
     private func colorRateView(data: FilmInfo) {
         if data.rate >= 7 {
-            rateView.backgroundColor = UIColor(named: "green")
+            rateView.backgroundColor = UIColor(named: Constants.green)
         } else {
             rateView.backgroundColor = .gray
         }
